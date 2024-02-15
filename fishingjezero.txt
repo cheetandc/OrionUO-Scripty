@@ -1,0 +1,137 @@
+function fishjezero(){
+	var fishTool = Orion.FindObject('prut');
+    if (fishTool == null) {
+        Orion.Print("Nemas nastaveny prut - prut");
+        return;
+    }
+	var chytame=true;
+	Orion.WarMode(0);
+	Orion.ControlAgent("scavenger","Fishing","start");
+	for (var y = -3; y < 4; ++y) {
+	Orion.Print(y);
+	chytame=true;
+	while (chytame) {
+		if (Player.Dead()) return;
+		var mobs = Orion.FindType('0xFFFF','0xFFFF', ground, 'near|mobile',  '12', 'criminal|red');	
+		if (mobs.length)
+		{
+			Orion.CharPrint('self', 30, "Creature nearby -- Killing!");
+			chytame=false;
+			Orion.ControlAgent("scavenger","Fishing","stop");
+			teleportnamolo();
+			return;
+		}
+		if (Player.Hidden()) return;
+		Orion.UseObject(fishTool);
+		if (Orion.WaitForTarget(1000))
+			Orion.TargetTileRelative('any', 0, y, 65536);
+		Orion.Wait(3500);
+		if (Orion.LastJournalMessage().Text()=="There are no fish here.") {
+				chytame=false;
+		}
+		if (Orion.LastJournalMessage().Text()=="World save has been initiated.") {
+			Orion.CharPrint('self', 30, "SAVE!");
+			Orion.Wait(12000);
+		}
+	if (Player.Weight()+10> Player.MaxWeight()) {
+	   fishkuch();
+	   surovniydospizirny();
+	}
+	}
+	} // konec for Y
+	Orion.ControlAgent("scavenger","Fishing","stop");
+	return;
+	while (chytame) {
+	Orion.UseType('0x0DBF', '0xFFFF');	
+	if (Orion.WaitForTarget(1000))
+		Orion.TargetTileRelative('any', -3, 0, 65535);
+	timee=Orion.Now()+3200+pn;
+	cekame=true;
+	while(cekame) {
+		Orion.Wait(250);
+		Orion.Print(Orion.LastJournalMessage().Text());
+		if (Orion.LastJournalMessage().Text()=="There are no fish here.") {
+				cekame = false;
+				chytame=false;
+		}
+		if (Orion.LastJournalMessage().Text()=="Dneska nejak neberou.") {
+			pn=pn+10;
+			timee=timee+10;
+			Orion.Print("Pridavame "+pn)
+		}
+		if (Orion.LastJournalMessage().Text()=="You pull out a fish!") {
+			pn=0;
+			Orion.Print("vracim pauzu navic na 0");
+		}
+		if (Orion.Now() >= timee) {
+				cekame = false;
+		}
+	}
+	}
+}
+function teleportnamolo(){
+	if (Player.X()>2065 && Player.X() < 2075) {
+			Orion.WalkTo(2073,1340,0,1,255,1);
+			Orion.Cast('22');
+			if (Orion.WaitForTarget(1000))
+				Orion.TargetTile('any', 2065, 1347, 0);
+			Orion.WalkTo(2072,1343,0,1,255,1);
+			Orion.Wait(2500);
+			Orion.WalkTo(2062,1376,0,1,255,1);
+	}
+	else
+	{
+	Orion.WalkTo(2055,1344,0,1,255,1);
+	Orion.WalkTo(2062,1376,0,1,255,1);
+	return;
+	Orion.Cast('22');
+	if (Orion.WaitForTarget(1000))
+		Orion.TargetTile('any', 2065, 1348, 0);
+	Orion.Wait(2500);
+	Orion.Print("Nasedame");
+	Orion.Say('.jezdik');
+	Orion.WalkTo(2062,1376,0,1,255,1);
+	}
+
+}
+function fishkuch(){
+	var typryb=["0x09CD",'0x09CE','0x09CF','0x09CC']
+	var cuter='0x4001BC10';
+	for (var ryba = 0; ryba < typryb.length ; ++ryba) {
+		Orion.UseObject(cuter);
+		Orion.Wait(250);
+		if (Orion.WaitForTarget(1000))
+			Orion.TargetType(typryb[ryba], '0xFFFF');
+		Orion.Wait(250);
+	}
+	return;
+	Orion.UseObject('0x4001BC10');
+	Orion.Wait(250);
+	if (Orion.WaitForTarget(1000))
+		Orion.TargetType('0x09CF', '0xFFFF');
+	Orion.Wait(250);
+	Orion.UseObject('0x4001BC10');
+	Orion.Wait(250);
+		if (Orion.WaitForTarget(1000))
+	Orion.TargetType('0x09CC', '0xFFFF');
+	Orion.Wait(250);
+}
+function surovniydospizirny()
+{
+	Orion.UseObject('0x40080A20');
+	if (Orion.WaitForGump(1000))
+	{
+		var gump0 = Orion.GetGump('last');
+		if ((gump0 !== null) && (!gump0.Replayed()) && (gump0.ID() === '0x960004C3'))
+		{
+			gump0.Select(Orion.CreateGumpHook(1));
+			Orion.Wait(100);
+		}
+	}
+	if (Orion.WaitForTarget(1000))
+		Orion.TargetObject('0x400C9747');
+	
+	
+	return;
+	Orion.TargetObject('0x400C9747');
+}
